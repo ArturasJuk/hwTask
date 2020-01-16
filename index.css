@@ -1,60 +1,57 @@
 body {
     margin: 0;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    /* background-color: yellowgreen; */
-}
-body ::-webkit-scrollbar {
-    display: none;
+    height: 100vh;
+    background: yellowgreen;
 }
 
 .left {
-    height: 100vh;
-    margin: 0;
-    overflow-y: auto;
-    /* background-color: lightcoral; */
     list-style-type: none;
+    padding-inline-start: 0;
     margin-block-start: 0;
     margin-block-end: 0;
-    margin-inline-start: 0;
-    margin-inline-end: 0;
-    padding-inline-start: 0;
+    background: red;
+    padding: auto;
+    min-width: 220px;
+    display: block;
+    flex-direction: column;
+    overflow-y: scroll;
 }
+
 
 .left li {
     height: 200px;
     width: 200px;
+    background: yellowgreen;
     margin: 10px;
 }
 
 .right {
-    /* background-color: lightblue; */
+    flex: auto;
     display: flex;
-    align-items: center;
+    height: 100vh;
     flex-direction: column;
-    padding: 1rem;
-}
-.right .author {
-    font-weight: bold;
+    background: lightblue;
 }
 
-.right .dimensions {
-    font-size: medium;
-}
-
-.right .img-description {
+.right .img-header {
     display: flex;
-    /* background-color: red; */
     flex-direction: column;
     align-items: center;
 }
 
-.img-container {
-    width: 60vw;
-    height: 60vh;
-    /* background-color: yellow; */
+.img-header h3 {
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+
+.img-body {
+    padding-top: auto;
+    padding-bottom: auto;
+    background: green;
+    height: 100%;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    /* background-image: url('https://picsum.photos/id/1002/4312/2868'); */
 }
