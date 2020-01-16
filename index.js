@@ -5,12 +5,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const imgHeaderDimensions = imgHeader.getElementsByTagName('span')[0];
   const imgBody = document.getElementsByClassName('img-body')[0];
 
-  // const handleClick = (event) => {
-  //   // imgBody.styles.background-image = `"url(${})"`;
-  //   console.log(event.target.id);
-  // }
+  let imgData = {};
 
-  // imgList.addEventListener('click', handleClick.bind());
+  const handleLiClick = (event) => {
+    event.preventDefault();
+    const { target: { tagName } } = event;
+    if (tagName !== 'IMG') return;
+
+    const { target: { id } } = event;
+    const img = imgData[id];
+
+    setImgBodyBackground(img);
+  }
+
+  imgList.addEventListener('click', handleLiClick);
+
 
   const fetchImages = () => {
     fetch('https://picsum.photos/v2/list')
@@ -18,7 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (res.status !== 200) {
           console.log('Invalid response from image server');
         } else {
-          res.json().then(appendToDOM);
+          res.json().then(images => {
+            appendToDOM(images);
+          });
         }
       })
       .catch(err => console.log('Error occurred while connecting to image server'));
@@ -26,18 +37,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const appendToDOM = (images) => {
     images.forEach(img => {
-      const {
-        id
-      } = img;
+      const { id } = img;
+      imgData[id] = {...img};
+
       const newNode = document.createElement('li');
-      newNode.addEventListener('click', handleImgClick.bind(null, img));
       newNode.innerHTML = `<img id="${id}" src="https://picsum.photos/id/${id}/200/200">`;
 
       imgList.appendChild(newNode);
     });
   }
 
-  const handleImgClick = (img) => {
+  const setImgBodyBackground = (img) => {
     const {
       id,
       author,
