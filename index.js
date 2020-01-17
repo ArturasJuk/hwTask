@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const imgHeaderDimensions = imgHeader.getElementsByTagName('span')[0];
   const imgBody = document.getElementsByClassName('img-body')[0];
 
-  let imgData = {};
+  let imgCache = {};
 
   const handleLiClick = (event) => {
     event.preventDefault();
@@ -13,41 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tagName !== 'IMG') return;
 
     const { target: { id } } = event;
-    const img = imgData[id];
+    const img = imgCache[id];
 
-    setImgBodyBackground(img);
+    setCurrentImg(img);
   }
 
-  imgList.addEventListener('click', handleLiClick);
-
-
-  const fetchImages = () => {
-    fetch('https://picsum.photos/v2/list')
-      .then(res => {
-        if (res.status !== 200) {
-          console.log('Invalid response from image server');
-        } else {
-          res.json().then(images => {
-            appendToDOM(images);
-          });
-        }
-      })
-      .catch(err => console.log('Error occurred while connecting to image server'));
-  }
-
-  const appendToDOM = (images) => {
-    images.forEach(img => {
-      const { id } = img;
-      imgData[id] = {...img};
-
-      const newNode = document.createElement('li');
-      newNode.innerHTML = `<img id="${id}" src="https://picsum.photos/id/${id}/200/200">`;
-
-      imgList.appendChild(newNode);
-    });
-  }
-
-  const setImgBodyBackground = (img) => {
+  const setCurrentImg = (img) => {
     const {
       id,
       author,
@@ -60,5 +31,30 @@ document.addEventListener('DOMContentLoaded', () => {
     imgBody.style.backgroundImage = `url("${download_url}")`;
   }
 
-  fetchImages();
+  const loadImages = () => {
+    fetch('https://picsum.photos/v2/list')
+      .then(res => {
+        if (res.status !== 200) {
+          console.log('Invalid response from image server');
+        } else {
+          res.json().then(appendToDOM);
+        }
+      })
+      .catch(err => console.log('Error occurred while connecting to image server'));
+  }
+
+  const appendToDOM = (images) => {
+    images.forEach(img => {
+      const { id } = img;
+      imgCache[id] = { ...img };
+
+      const newNode = document.createElement('li');
+      newNode.innerHTML = `<img id="${id}" src="https://picsum.photos/id/${id}/200/200">`;
+
+      imgList.appendChild(newNode);
+    });
+  }
+
+  loadImages();
+  imgList.addEventListener('click', handleLiClick);
 });
